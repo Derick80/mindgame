@@ -10,15 +10,16 @@ type Props = {
         id: number;
     }
     handleChoice: Function
+    flipped: boolean
 }
 
-const SingleCard = ({ card, handleChoice }: Props) => {
+const SingleCard = ({ card, handleChoice, flipped }: Props) => {
     const handleClick = () => {
         handleChoice(card);
     }
     return (
         <div className='card'>
-            <div>
+            <div className={flipped ? 'flipped' : ""}>
                 <img className='front' src={card.src} alt='card front' />
                 <img
                     className='back'
