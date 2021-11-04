@@ -30,11 +30,15 @@ function App() {
   const [turns, setTurns] = useState(0)
   const [choiceOne, setChoiceOne] = useState<Card | null>(null)
   const [choiceTwo, setChoiceTwo] = useState<Card | null>(null)
+  const [disabled, setDisabled] = useState(false)
 
   const shuffuleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
       .sort(() => Math.random() - 0.5)
       .map((card) => ({ ...card, id: Math.random() }))
+
+    setChoiceOne(null)
+    setChoiceTwo(null)
     setCards(shuffledCards)
     setTurns(0)
 
@@ -50,7 +54,9 @@ function App() {
   //compare 2 selected cards
 
   useEffect(() => {
+
     if (choiceOne && choiceTwo) {
+      setDisabled(true)
       if (choiceOne.src === choiceTwo.src) {
         setCards(prevCards => {
           return prevCards?.map(card => {
@@ -66,7 +72,7 @@ function App() {
 
       } else {
         console.log("these do not match");
-        resetTurn()
+        setTimeout(() => resetTurn(), 800)
 
       }
     }
@@ -77,10 +83,17 @@ function App() {
     setChoiceOne(null)
     setChoiceTwo(null)
     setTurns(prevTurns => prevTurns + 1)
+    setDisabled(false)
   }
+
+  //start game auto matically
+
+  useEffect(() => {
+    shuffuleCards()
+  }, [])
   return (
     <div className="App">
-      <h1>Magic Button</h1>
+      <h1>WoW Memory Game</h1>
       <button onClick={shuffuleCards}>New Game</button>
       <div className="card-grid">
         {cards.map(card => (
@@ -89,10 +102,12 @@ function App() {
             card={card}
             handleChoice={handleChoice}
             flipped={card === choiceOne || card === choiceTwo || card.matched}
+            disabled={disabled}
           />
         ))}
 
       </div>
+      <p>Turns: {turns}</p>
     </div>
   );
 }

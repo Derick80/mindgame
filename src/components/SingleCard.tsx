@@ -11,11 +11,15 @@ type Props = {
     }
     handleChoice: Function
     flipped: boolean
+    disabled: boolean
 }
 
-const SingleCard = ({ card, handleChoice, flipped }: Props) => {
+const SingleCard = ({ card, handleChoice, flipped, disabled }: Props) => {
     const handleClick = () => {
-        handleChoice(card);
+        if (!disabled) {
+            handleChoice(card);
+        }
+
     }
     return (
         <div className='card'>
