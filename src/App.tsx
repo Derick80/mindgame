@@ -5,30 +5,31 @@ import SingleCard from './components/SingleCard';
 
 
 const cardImages = [
-  { "src": "/img/devo.png" },
-  { "src": "/img/fireball.png" },
-  { "src": "/img/frostbolt.png" },
-  { "src": "/img/heal.png" },
-  { "src": "/img/healaura.png" },
-  { "src": "/img/hw.png" },
-  { "src": "/img/if.png" },
-  { "src": "/img/lhw.png" },
-  { "src": "/img/meta.png" },
-  { "src": "/img/poss.png" },
-  { "src": "/img/sw.png" },
+  { "src": "/img/devo.png", matched: false },
+  { "src": "/img/fireball.png", matched: false },
+  { "src": "/img/frostbolt.png", matched: false },
+  { "src": "/img/heal.png", matched: false },
+  { "src": "/img/healaura.png", matched: false },
+  { "src": "/img/hw.png", matched: false },
+  { "src": "/img/if.png", matched: false },
+  { "src": "/img/lhw.png", matched: false },
+  { "src": "/img/meta.png", matched: false },
+  { "src": "/img/poss.png", matched: false },
+  { "src": "/img/sw.png", matched: false },
 
 ]
 export interface Card {
   src: string;
   id: number
+  matched: boolean
 }
 
 
 function App() {
   const [cards, setCards] = useState<Card[]>([])
   const [turns, setTurns] = useState(0)
-  const [choiceOne, setChoiceOne] = useState<Card>({} as Card)
-  const [choiceTwo, setChoiceTwo] = useState<Card>({} as Card)
+  const [choiceOne, setChoiceOne] = useState<Card | null>(null)
+  const [choiceTwo, setChoiceTwo] = useState<Card | null>(null)
 
   const shuffuleCards = () => {
     const shuffledCards = [...cardImages, ...cardImages]
@@ -51,7 +52,20 @@ function App() {
   useEffect(() => {
     if (choiceOne && choiceTwo) {
       if (choiceOne.src === choiceTwo.src) {
+        setCards(prevCards => {
+          return prevCards?.map(card => {
+            if (card.src === choiceOne.src) {
+              return { ...card, matched: true }
+            } else {
+              return card
+            }
+          })
+        })
         console.log('those cards match');
+        resetTurn()
+
+      } else {
+        console.log("these do not match");
         resetTurn()
 
       }
@@ -60,8 +74,8 @@ function App() {
 
 
   const resetTurn = () => {
-    setChoiceOne({} as Card)
-    setChoiceTwo({} as Card)
+    setChoiceOne(null)
+    setChoiceTwo(null)
     setTurns(prevTurns => prevTurns + 1)
   }
   return (
